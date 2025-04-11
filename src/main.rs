@@ -1,23 +1,23 @@
-use clap::{App, Arg};
+use clap::{Command, Arg};
 
 fn main() {
-    let matches = App::new("Sync")
+    let matches = Command::new("Sync")
         .version("1.0")
         .author("Pjdur")
         .about("A modern version control system written in Rust")
         .subcommand(
-            App::new("init")
+            Command::new("init")
                 .about("Initialize a new repository")
         )
         .subcommand(
-            App::new("commit")
+            Command::new("commit")
                 .about("Record changes to the repository")
                 .arg(Arg::new("message")
                     .short('m')
                     .long("message")
                     .value_name("MESSAGE")
-                    .about("Commit message")
-                    .takes_value(true))
+                    .help("Commit message")
+                    .num_args(1))
         )
         .get_matches();
 
@@ -27,7 +27,7 @@ fn main() {
             // Implement repository initialization logic here
         },
         Some(("commit", sub_m)) => {
-            if let Some(message) = sub_m.value_of("message") {
+            if let Some(message) = sub_m.get_one::<String>("message") {
                 println!("Committing changes with message: {}", message);
                 // Implement commit logic here
             } else {
