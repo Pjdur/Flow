@@ -4,5 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+chrono = "0.4.40"
 clap = { version = "4.0", features = ["derive"] }
 fs_extra = "1.2"
+git2 = "0.20.1"
+sha2 = "0.10.8"

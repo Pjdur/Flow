@@ -50,7 +50,6 @@ fn main() {
             println!("Sync v{}", "1.0");
             Command::new("Sync")
                 .version("1.0")
-                .author("Pjdur")
                 .about("A modern version control system written in Rust")
                 .print_help()
                 .expect("Failed to print help");
