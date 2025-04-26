@@ -1,5 +1,4 @@
 use git2::{Repository, Signature};
-use std::path::Path;
 
 pub fn commit_changes(repo_path: &str, message: &str) {
     // Open the repository
