@@ -16,7 +16,7 @@ Flow leverages Rust's safety and performance to deliver a modern VCS that priori
 
 ## Getting Started
 
-1. Install Flow by following the [installation guide](#).
+1. Install Flow by following the [installation guide](./Install.md).
 2. Initialize a repository with `flow init`.
 3. Start tracking changes with `flow add` and `flow commit`.
 
@@ -28,4 +28,4 @@ Contributions are welcome! Check out the [contributing guidelines](#) to get sta
 
 ## License
 
-Flow is licensed under the [EPL 2.0 License](LICENSE). See the LICENSE file for more details.
+Flow is licensed under the [EPL 2.0 License](./LICENSE). See the LICENSE file for more details.
