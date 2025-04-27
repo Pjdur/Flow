@@ -24,7 +24,7 @@ For detailed documentation, visit the [official documentation](#).
 
 ## Contributing
 
-Contributions are welcome! Check out the [contributing guidelines](#) to get started.
+Contributions are welcome! Check out the [contributing guidelines](./CONTRIBUTING.md) to get started.
 
 ## License
 
