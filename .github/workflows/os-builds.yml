@@ -23,17 +23,15 @@ jobs:
       - name: Install dependencies (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          brew install openssl pkg-config || sudo apt-get install libssl-dev pkg-config
-          export OPENSSL_DIR=$(brew --prefix openssl)
-          export OPENSSL_LIB_DIR=$OPENSSL_DIR/lib
-        if: runner.os != 'Windows'
-        run: |
           if [[ "$RUNNER_OS" == "Linux" ]]; then
             sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install openssl pkg-config
             export OPENSSL_DIR=$(brew --prefix openssl)
             export OPENSSL_LIB_DIR=$OPENSSL_DIR/lib
+          fi
+
+      - name: Build project
         run: |
           if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             cargo build --release --target=x86_64-unknown-linux-gnu
@@ -42,7 +40,8 @@ jobs:
           elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
             cargo build --release --target=x86_64-apple-darwin
           fi
-          fi
+
+      - name: Organize build artifacts
         run: |
           mkdir -p builds/linux builds/win builds/macos
           mv target/x86_64-unknown-linux-gnu/release/* builds/linux/ || true
@@ -52,8 +51,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }}-binary
-          path: builds/${{ matrix.os == 'ubuntu-latest' && 'linux' || matrix.os == 'windows-latest' && 'win' || 'macos' }}/
+          name: ${{ matrix.os }}-binary
+          path: ${{ matrix.os == 'ubuntu-latest' && 'builds/linux' || matrix.os == 'windows-latest' && 'builds/win' || 'builds/macos' }}
 
   release:
     needs: build
