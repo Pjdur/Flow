@@ -2,6 +2,11 @@
 
 Flow is a VCS (Version Control System) written in Rust. It is designed to provide a fast, reliable, and user-friendly experience for managing source code and tracking changes.
 
+**OS Support**
+- Windows
+- Linux
+- MacOS
+
 ## Features
 
 - **High Performance**: Built with Rust, Flow ensures speed and efficiency.

@@ -1,0 +1,86 @@
+name: Build and Release for Multiple Platforms
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: |
+            x86_64-unknown-linux-gnu
+            x86_64-pc-windows-gnu
+            x86_64-apple-darwin
+
+      - name: Install dependencies (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          brew install openssl pkg-config || sudo apt-get install libssl-dev pkg-config
+          export OPENSSL_DIR=$(brew --prefix openssl)
+          export OPENSSL_LIB_DIR=$OPENSSL_DIR/lib
+          export OPENSSL_INCLUDE_DIR=$OPENSSL_DIR/include
+
+      - name: Build project
+        run: cargo build --release --target=${{ matrix.os == 'ubuntu-latest' && 'x86_64-unknown-linux-gnu' || matrix.os == 'windows-latest' && 'x86_64-pc-windows-gnu' || 'x86_64-apple-darwin' }}
+
+      - name: Create build directories and move binaries
+        run: |
+          mkdir -p builds/linux builds/win builds/macos
+          mv target/x86_64-unknown-linux-gnu/release/* builds/linux/ || true
+          mv target/x86_64-pc-windows-gnu/release/* builds/win/ || true
+          mv target/x86_64-apple-darwin/release/* builds/macos/ || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-binary
+          path: builds/${{ matrix.os == 'ubuntu-latest' && 'linux' || matrix.os == 'windows-latest' && 'win' || 'macos' }}/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create a Git tag
+        run: |
+          TAG=v1.0.${{ github.run_number }}
+          git tag $TAG
+          git push origin $TAG
+          echo "TAG_NAME=$TAG" >> $GITHUB_ENV
+
+      - name: Verify Environment Variables
+        run: |
+          echo "Using tag: $TAG_NAME"
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
+
+      - name: Upload Release to GitHub
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ env.TAG_NAME }}
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: builds/**/*
+          body: |
+            🚀 New release generated from GitHub Actions!
+            
+            **Platforms included:**
+            - 🐧 Linux (`builds/linux/`)
+            - 🖥️ Windows (`builds/win/`)
+            - 🍏 macOS (`builds/macos/`)
