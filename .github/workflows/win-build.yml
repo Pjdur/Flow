@@ -23,7 +23,7 @@ jobs:
       - name: Organize build artifacts
         run: |
           mkdir -p builds/win
-          mv target/x86_64-pc-windows-gnu/release/* builds/win/
+          mv target/x86_64-pc-windows-gnu/release/flow.exe builds/win/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
