@@ -6,7 +6,7 @@ Flow is a version control system written in Rust. Follow the steps below to inst
 
 **Windows**
 Run this in your terminal to install Flow:
-```
+```powershell
 powershell -c "irm https://pjdur.github.io/Flow/install.ps1 | iex"
 ```
 

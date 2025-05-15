@@ -1,6 +1,7 @@
 use git2::{Repository, RemoteCallbacks};
 use std::env;
 
+#[allow(dead_code)]
 pub async fn fetch_changes(remote: &str) {
     let current_dir = env::current_dir().unwrap();
     let repo = match Repository::open(&current_dir) {

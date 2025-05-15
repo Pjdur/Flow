@@ -23,8 +23,8 @@ async fn main() {
                     Arg::new("repo_name")
                         .value_name("REPO_NAME")
                         .help("Name of the repository to initialize")
-                        .required(true) // Make this argument mandatory
-                        .index(1), // Positional argument
+                        .required(true)
+                        .index(1),
                 ),
         )
         .subcommand(
@@ -40,8 +40,15 @@ async fn main() {
                 ),
         )
         .subcommand(
-            Command::new("fetch")
-                .about("Fetch changes from a remote repository"),
+            Command::new("merge")
+                .about("Merge a branch into the current branch")
+                .arg(
+                    Arg::new("branch")
+                        .value_name("BRANCH")
+                        .help("Name of the branch to merge")
+                        .required(true)
+                        .index(1),
+                ),
         )
         .get_matches();
 
@@ -57,23 +64,25 @@ async fn main() {
         Some(("commit", sub_m)) => {
             if let Some(message) = sub_m.get_one::<String>("message") {
                 println!("Committing changes with message: {}", message);
-                commands::commit::commit_changes(message, "default_arg");
+                commands::commit::commit_changes(".", message);
             } else {
                 println!("Commit message is required");
             }
         }
-        Some(("fetch", sub_m)) => {
-            println!("Fetching changes from remote repository...");
-            if let Some(remote) = sub_m.get_one::<String>("remote") {
-                commands::fetch::fetch_changes(remote).await;
+        Some(("merge", sub_m)) => {
+            if let Some(branch) = sub_m.get_one::<String>("branch") {
+                match commands::merge::merge_branches(".", branch) {
+                    Ok(_) => println!("Successfully merged branch '{}'", branch),
+                    Err(e) => eprintln!("Failed to merge branch '{}': {}", branch, e),
+                }
             } else {
-                println!("Remote repository name is required");
+                println!("Branch name is required");
             }
         }
         _ => {
-            println!("Flow v{}", "1.0");
+            println!("Flow v{}", "1.0.4");
             Command::new("Flow")
-                .version("1.0")
+                .version("1.0.4")
                 .about("A modern version control system written in Rust")
                 .print_help()
                 .expect("Failed to print help");
