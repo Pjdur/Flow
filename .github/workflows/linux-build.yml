@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,7 +21,7 @@ jobs:
       - name: Organize build artifacts
         run: |
           mkdir -p builds/linux
-          mv target/x86_64-unknown-linux-gnu/release/flow builds/linux/
+          cp target/x86_64-unknown-linux-gnu/release/* builds/linux/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -33,24 +32,36 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Draft Release with Release Drafter
+      - name: Generate Release Notes with Release Drafter
         uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Tag from Release Drafter
+        id: tag
+        run: |
+          TAG_NAME=$(gh release view --json tagName --jq .tagName || echo "v0.1.0")
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Tag to GitHub
+        run: |
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME"
 
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tag_name: ${{ env.TAG_NAME }}
           files: builds/linux/*
           body: |
             🚀 New release generated from GitHub Actions!
-            
-            **Platform included:**
+            **Platform included:**  
             - 🐧 Linux (`builds/linux/`).
