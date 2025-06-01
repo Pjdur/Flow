@@ -1,13 +1,18 @@
-name-template: "v$NEXT_PATCH"
-tag-template: "v$NEXT_PATCH"
+name-template: v$NEXT_PATCH
+tag-template: v$NEXT_PATCH
+
 categories:
-  - title: 🚀 Features
+  - title: "🚀 Features"
     labels:
       - "feature"
-  - title: 🐛 Bug Fixes
+  - title: "🐛 Bug Fixes"
     labels:
       - "fix"
+
 version:
-  bump-patch-labels: ["fix"]
-  bump-minor-labels: ["feat"]
-  bump-major-labels: ["BREAKING CHANGE"]
+  bump-patch-labels:
+    - "fix"
+  bump-minor-labels:
+    - "feat"
+  bump-major-labels:
+    - "BREAKING CHANGE"
