@@ -20,7 +20,7 @@ jobs:
 
       - name: Organize build artifacts
         run: |
-          mkdir -p builds/linux
+          mkdir -p -r builds/linux
           cp target/x86_64-unknown-linux-gnu/release/* builds/linux/
 
       - name: Upload artifacts

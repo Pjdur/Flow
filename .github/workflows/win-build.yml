@@ -43,11 +43,14 @@ jobs:
 
       - name: Generate Tag from Release Drafter
         id: tag
+        shell: pwsh
         run: |
-          TAG_NAME=$(gh release view --json tagName --jq .tagName || echo "v0.1.0")
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          $tagName = $(gh release view --json tagName --jq '.tagName') 
+          if (-not $tagName) { $tagName = "v0.1.0" }
+          echo "TAG_NAME=$tagName" | Out-File -FilePath $env:GITHUB_ENV -Append
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Push Tag to GitHub
         run: |
