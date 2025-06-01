@@ -1,0 +1,58 @@
+name: Build and Release for Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        run: rustup update stable && rustup target add x86_64-pc-windows-gnu
+
+      - name: Build project
+        run: cargo build --release --target=x86_64-pc-windows-gnu
+
+      - name: Organize build artifacts
+        run: |
+          mkdir -p builds/win
+          mv target/x86_64-pc-windows-gnu/release/flow.exe builds/win/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binary
+          path: builds/win/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Draft Release with Release Drafter
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: builds/win/flow.exe
+          tag_name: ${{ github.ref }}
+          body: |
+            🚀 New release generated from GitHub Actions!
+            
+            **Platform included:**
+            - 🖥️ Windows (`builds/win/`)
