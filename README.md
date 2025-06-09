@@ -1,4 +1,4 @@
-## Documentation
+## Flow
 
 - [Introduction](docs/introduction.md)
 - [Installation](docs/installation.md)
