@@ -65,7 +65,7 @@ try {
     $calculatedChecksum = Get-FileHash -Path $destFile -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
     if ($calculatedChecksum -ne $expectedChecksum) {
-        Write-Error "Checksum verification failed. Expected: $expectedChecksum, but got: $calculatedChecksum. Report this security issue to https://github.com/Pjdur/Mine/security/advisories"
+        Write-Error "Checksum verification failed. Expected: $expectedChecksum, but got: $calculatedChecksum. Report this security issue to https://github.com/Pjdur/Flow/security/advisories"
         Remove-Item -Path $destFile -Force
         exit 1
     }
@@ -77,8 +77,8 @@ try {
         $env:Path += ";$binDir"
     }
 
-    Write-Host "`nSuccessfully installed mine to $homeDir"
-    Write-Host "Mine has been successfully installed."
+    Write-Host "`nSuccessfully installed Flow to $homeDir"
+    Write-Host "Flow has been successfully installed."
 }
 catch {
     Write-Error "Failed to download or install the executable: $_"
