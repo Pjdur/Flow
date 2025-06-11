@@ -60,6 +60,10 @@ async fn main() {
                         .num_args(1..),
                 ),
         )
+        .subcommand(
+            Command::new("update")
+                .about("Update Flow to the latest version"),
+        )
         .get_matches();
 
     match matches.subcommand() {
@@ -99,6 +103,10 @@ async fn main() {
                 Ok(_) => println!("Added files to staging area: {:?}", files),
                 Err(e) => eprintln!("Failed to add files: {}", e),
             }
+        }
+        Some(("update", _sub_m)) => {
+            println!("Updating Flow to the latest version...");
+            commands::update::update_flow();
         }
         _ => {
             println!("Flow v{}", "1.1.0");

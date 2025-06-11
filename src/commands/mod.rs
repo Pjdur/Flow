@@ -4,3 +4,4 @@ pub mod clone;
 pub mod fetch;
 pub mod merge;
 pub mod add;
+pub mod update;
