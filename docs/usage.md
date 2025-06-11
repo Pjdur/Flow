@@ -45,10 +45,17 @@ flow fetch
 ```
 
 ### `flow clone <repository>`
-This command clones a remote Flow repository to your local machine. It creates a copy of the repository, including all its history and branches.
+This command clones a remote repository to your local machine. It creates a copy of the repository, including all its history and branches.
 
 ```bash
 flow clone repository_url
+```
+
+### `flow add <file>`
+This command adds a file to the Flow repository. It stages the file for commit, meaning it will be included in the next commit.
+
+```bash
+flow add file_name
 ```
 
 ### `flow commit -m <message>`

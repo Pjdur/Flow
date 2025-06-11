@@ -22,11 +22,12 @@ For more information on how to use Flow, please refer to the [usage documentatio
 
 ## Current Commands
 
-- `flow commit`: Commit changes to the repository.
 - `flow init`: Initialize a new Flow repository with a specified directory.
-- `flow merge`: Merge branches.
-- `flow fetch`: Fetch changes from a remote repository.
+- `flow add`: Add files to the staging area for commit.
+- `flow commit`: Commit changes to the repository.
 - `flow clone`: Clone a remote repository.
+- `flow fetch`: Fetch changes from a remote repository.
+- `flow merge`: Merge branches.
 
 > Currently, Flow is in its early stages of development, and more commands will be added in the future. The current commands are designed to cover the most common use cases for version control, but additional functionality will be added as needed.
 ---
