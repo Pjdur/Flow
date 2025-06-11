@@ -18,5 +18,5 @@ curl -fsSL https://pjdur.github.io/Flow/install.sh | bash
 
 ## Additional Resources
 
-- [Flow Documentation](https://github.com/Pjdur/flow/wiki)
+- [Flow Documentation](https://pjdur.github.io/Flow)
 - [Rust Programming Language](https://www.rust-lang.org/)

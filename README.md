@@ -24,7 +24,7 @@ Flow leverages Rust's safety and performance to deliver a modern VCS that priori
 2. Initialize a repository with `flow init`.
 3. Start tracking changes with `flow add` and `flow commit`.
 
-For detailed documentation, visit the [official documentation](#).
+For detailed documentation, visit the [official documentation](https://pjdur.github.io/Flow).
 
 ## Contributing
 

@@ -5,7 +5,7 @@ use clap::{Arg, Command};
 #[tokio::main]
 async fn main() {
     let matches = Command::new("Flow")
-        .version("1.0")
+        .version("1.1.0")
         .author("Pjdur")
         .about("A modern version control system written in Rust")
         .subcommand(
@@ -50,6 +50,16 @@ async fn main() {
                         .index(1),
                 ),
         )
+        .subcommand(
+            Command::new("add")
+                .about("Add file(s) to the staging area")
+                .arg(
+                    Arg::new("files")
+                        .help("Files to add to the staging area")
+                        .required(true)
+                        .num_args(1..),
+                ),
+        )
         .get_matches();
 
     match matches.subcommand() {
@@ -79,10 +89,21 @@ async fn main() {
                 println!("Branch name is required");
             }
         }
+        Some(("add", sub_m)) => {
+            let files: Vec<String> = sub_m
+                .get_many::<String>("files")
+                .unwrap()
+                .map(|s| s.to_string())
+                .collect();
+            match commands::add::add_files(".", &files) {
+                Ok(_) => println!("Added files to staging area: {:?}", files),
+                Err(e) => eprintln!("Failed to add files: {}", e),
+            }
+        }
         _ => {
-            println!("Flow v{}", "1.0.4");
+            println!("Flow v{}", "1.1.0");
             Command::new("Flow")
-                .version("1.0.4")
+                .version("1.1.0")
                 .about("A modern version control system written in Rust")
                 .print_help()
                 .expect("Failed to print help");
