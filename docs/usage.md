@@ -30,6 +30,27 @@ This command initializes a new Flow repository using a template. A template is a
 flow init repository_name --template template_name
 ```
 
+### `flow merge <branch>`
+This command merges the specified branch into the current branch. It is useful for integrating changes from one branch into another.
+
+```bash
+flow merge branch_name
+```
+
+### `flow fetch`
+This command fetches changes from a remote repository. It updates your local repository with the latest changes from the remote, without merging them into your current branch.
+
+```bash
+flow fetch
+```
+
+### `flow clone <repository>`
+This command clones a remote Flow repository to your local machine. It creates a copy of the repository, including all its history and branches.
+
+```bash
+flow clone repository_url
+```
+
 ### `flow commit -m <message>`
 This command commits your changes to the Flow repository. The `-m` option allows you to specify a commit message.
 
