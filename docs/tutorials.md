@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Introduction
+title: Tutorials
 nav_order: 5
 ---
 
