@@ -1,3 +1,9 @@
+---
+layout: default
+title: Introduction
+nav_order: 3
+---
+
 # Installation
 
 Follow these steps to install and set up **Flow**:

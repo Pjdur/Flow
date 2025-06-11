@@ -1,3 +1,9 @@
+---
+layout: default
+title: Introduction
+nav_order: 5
+---
+
 # Tutorials
 
 This page contains a collection of tutorials to demonstrate how to use Flow.
