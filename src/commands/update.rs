@@ -10,6 +10,9 @@ pub fn update_flow() {
 
         // Write the updater script
         let script = r#"
+# Clear the console output
+Clear-Host
+
 # Kill all running flow.exe processes
 Get-Process -Name "flow" -ErrorAction SilentlyContinue | Stop-Process -Force
 
@@ -25,6 +28,8 @@ Invoke-WebRequest -Uri $exeUrl -OutFile $dest -UseBasicParsing
 Start-Process $dest
 "#;
         if let Err(e) = fs::write(&updater_path, script) {
+            // Clear output before error
+            print!("\x1B[2J\x1B[1;1H");
             eprintln!("Failed to write updater script: {e}");
             return;
         }
@@ -34,9 +39,13 @@ Start-Process $dest
             .args(&["-WindowStyle", "Hidden", "-File", updater_path.to_str().unwrap()])
             .spawn();
 
+        // Clear output before exit
+        print!("\x1B[2J\x1B[1;1H");
         println!("Flow will now update and restart.");
         std::process::exit(0);
     } else {
+        // Clear output before message
+        print!("\x1B[2J\x1B[1;1H");
         println!("Flow update is currently only supported on Windows.");
     }
 }
