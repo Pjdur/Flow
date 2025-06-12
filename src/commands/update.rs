@@ -18,7 +18,7 @@ Start-Sleep -Seconds 2
 
 # Download new executable
 $dest = "$env:USERPROFILE\.flow\bin\flow.exe"
-$exeUrl = "https://raw.githubusercontent.com/Pjdur/Flow/refs/heads/main/flow.exe"
+$exeUrl = "https://raw.githubusercontent.com/Pjdur/Flow/refs/heads/main/bin/flow.exe"
 Invoke-WebRequest -Uri $exeUrl -OutFile $dest -UseBasicParsing
 
 # Restart flow
