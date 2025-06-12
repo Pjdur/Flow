@@ -21,6 +21,11 @@ cp /workspaces/Flow/target/x86_64-unknown-linux-gnu/release/flow ./bin/
 # Copy Windows executable
 cp /workspaces/Flow/target/x86_64-pc-windows-gnu/release/flow.exe ./bin/
 
+git add ./bin/flow ./bin/flow.exe
+git commit -m "Build Flow for Linux and Windows"
+echo "Built Flow for Linux and Windows and committed the binaries"
+# Check if sha256sum is available
+
 # Generate checksum for bin/flow.exe using sha256sum (only the hash value)
 echo "Generating checksum for bin/flow.exe..."
 CHECKSUM=$(sha256sum ./bin/flow.exe | awk '{ print $1 }')
