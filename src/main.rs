@@ -5,7 +5,7 @@ use clap::{Arg, Command};
 #[tokio::main]
 async fn main() {
     let matches = Command::new("Flow")
-        .version("1.1.0")
+        .version("1.3.0")
         .author("Pjdur")
         .about("A modern version control system written in Rust")
         .subcommand(
@@ -109,9 +109,9 @@ async fn main() {
             commands::update::update_flow();
         }
         _ => {
-            println!("Flow v{}", "1.1.0");
+            println!("Flow v{}", "1.3.0");
             Command::new("Flow")
-                .version("1.1.0")
+                .version("1.3.0")
                 .about("A modern version control system written in Rust")
                 .print_help()
                 .expect("Failed to print help");

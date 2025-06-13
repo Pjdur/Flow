@@ -19,10 +19,39 @@ Get-Process -Name "flow" -ErrorAction SilentlyContinue | Stop-Process -Force
 # Wait a moment to ensure processes are stopped
 Start-Sleep -Seconds 2
 
-# Download new executable
+# Download new executable with progress bar
 $dest = "$env:USERPROFILE\.flow\bin\flow.exe"
 $exeUrl = "https://raw.githubusercontent.com/Pjdur/Flow/refs/heads/main/bin/flow.exe"
-Invoke-WebRequest -Uri $exeUrl -OutFile $dest -UseBasicParsing
+
+try {
+    $response = Invoke-WebRequest -Uri $exeUrl -UseBasicParsing -Method Head
+    $total = [int64]$response.Headers["Content-Length"]
+    $blockSize = 8192
+    $downloaded = 0
+    $barLength = 20
+
+    $req = [System.Net.HttpWebRequest]::Create($exeUrl)
+    $res = $req.GetResponse()
+    $stream = $res.GetResponseStream()
+    $fs = [System.IO.File]::Open($dest, [System.IO.FileMode]::Create)
+
+    $buffer = New-Object byte[] $blockSize
+    while (($read = $stream.Read($buffer, 0, $blockSize)) -gt 0) {
+        $fs.Write($buffer, 0, $read)
+        $downloaded += $read
+        $percent = [math]::Min([math]::Max($downloaded / $total, 0), 1)
+        $filled = [int]($percent * $barLength)
+        $bar = ('#' * $filled).PadRight($barLength, '-')
+        Write-Host -NoNewline "`r[$bar] $([int]($percent*100))% "
+    }
+    Write-Host ""
+    $fs.Close()
+    $stream.Close()
+    $res.Close()
+} catch {
+    Write-Host "Download failed: $_"
+    exit 1
+}
 
 # Restart flow
 Start-Process $dest
