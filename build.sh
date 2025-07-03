@@ -1,46 +1,42 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# This script builds Flow for both Linux and Windows
-# It assumes it is run from the root of this repository
+# Ensure script runs from the repository root
+cd "$(dirname "$0")"
 
-# Build for Linux
+# Output directories
+LINUX_TARGET="x86_64-unknown-linux-gnu"
+WINDOWS_TARGET="x86_64-pc-windows-gnu"
+BIN_DIR="./bin"
+
 echo "Building for Linux..."
-cargo build --release --target x86_64-unknown-linux-gnu > /dev/null 2>&1
+cargo build --release --target "$LINUX_TARGET" > /dev/null 2>&1
 
-# Build for Windows
 echo "Building for Windows..."
-cargo build --release --target x86_64-pc-windows-gnu > /dev/null 2>&1
+cargo build --release --target "$WINDOWS_TARGET" > /dev/null 2>&1
 
-# Create the bin directory if it doesn't exist
-mkdir -p ./bin
+mkdir -p "$BIN_DIR"
 
-# Copy Linux executable
-cp /workspaces/Flow/target/x86_64-unknown-linux-gnu/release/flow ./bin/
+# Copy executables to bin directory
+cp "target/$LINUX_TARGET/release/flow" "$BIN_DIR/" || { echo "Linux build failed or missing."; exit 1; }
+cp "target/$WINDOWS_TARGET/release/flow.exe" "$BIN_DIR/" || { echo "Windows build failed or missing."; exit 1; }
 
-# Copy Windows executable
-cp /workspaces/Flow/target/x86_64-pc-windows-gnu/release/flow.exe ./bin/
+git add "$BIN_DIR/flow" "$BIN_DIR/flow.exe"
+git commit -m "Build Flow for Linux and Windows" || echo "No changes to commit for binaries."
 
-git add ./bin/flow ./bin/flow.exe
-git commit -m "Build Flow for Linux and Windows"
-echo "Built Flow for Linux and Windows and committed the binaries"
-
-# Generate checksum for bin/flow.exe using sha256sum (only the hash value)
+# Generate checksums
 echo "Generating checksum for bin/flow.exe..."
-WIN_CHECK=$(sha256sum ./bin/flow.exe | awk '{ print $1 }')
+WIN_CHECK=$(sha256sum "$BIN_DIR/flow.exe" | awk '{ print $1 }')
 
 echo "Generating checksum for bin/flow..."
-LIN_CHECK=$(sha256sum ./bin/flow | awk '{ print $1 }')
+LIN_CHECK=$(sha256sum "$BIN_DIR/flow" | awk '{ print $1 }')
 
-# Save Windows checksum to win-check.txt
+# Save checksums
 echo "$WIN_CHECK" > win-check.txt
-echo "Windows Checksum saved to win-check.txt"
-
-# Save Linux checksum to linux-check.txt
 echo "$LIN_CHECK" > linux-check.txt
-echo "Linux Checksum saved to linux-check.txt"
+echo "Checksums saved."
 
-# Commit the win-check.txt and linux-check.txt files
 git add win-check.txt linux-check.txt
-git commit -m "Add checksums for bin/flow and bin/flow.exe"
-echo "Committed win-check.txt and linux-check.txt with checksums"
+git commit -m "Add checksums for bin/flow and bin/flow.exe" || echo "No changes to commit for checksums."
+
+echo "Build and checksum generation completed successfully."
