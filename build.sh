@@ -28,13 +28,20 @@ echo "Built Flow for Linux and Windows and committed the binaries"
 
 # Generate checksum for bin/flow.exe using sha256sum (only the hash value)
 echo "Generating checksum for bin/flow.exe..."
-CHECKSUM=$(sha256sum ./bin/flow.exe | awk '{ print $1 }')
+WIN_CHECK=$(sha256sum ./bin/flow.exe | awk '{ print $1 }')
 
-# Save checksum to checksum.txt
-echo "$CHECKSUM" > checksum.txt
-echo "Checksum saved to checksum.txt"
+echo "Generating checksum for bin/flow..."
+LIN_CHECK=$(sha256sum ./bin/flow | awk '{ print $1 }')
 
-# Commit the checksum.txt file
-git add checksum.txt
-git commit -m "Add checksum for bin/flow.exe"
-echo "Committed checksum.txt"
+# Save Windows checksum to win-check.txt
+echo "$WIN_CHECK" > win-check.txt
+echo "Windows Checksum saved to win-check.txt"
+
+# Save Linux checksum to linux-check.txt
+echo "$LIN_CHECK" > linux-check.txt
+echo "Linux Checksum saved to linux-check.txt"
+
+# Commit the win-check.txt and linux-check.txt files
+git add win-check.txt linux-check.txt
+git commit -m "Add checksums for bin/flow and bin/flow.exe"
+echo "Committed win-check.txt and linux-check.txt with checksums"
